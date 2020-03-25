@@ -1,1 +1,1 @@
-# Misskey Note Getter by Nim
+# Misskey Notes Getter by Nim
