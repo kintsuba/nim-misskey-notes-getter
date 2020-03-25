@@ -5,24 +5,26 @@ import os, json
 import yaml/serialization, streams, strutils
 
 type Settings = object
-  token: string;
+  token: string
+  notesCount: int
+  wait: int
+  userId: string
 
 proc main() =
   var settings: Settings;
   var s = newFileStream("settings.yaml")
   load(s, settings)
-  const meimeiToken = "5acddf5fcd7aebd97984769a"
 
   var
     count = 0
-    getNotesCount = 300
+    getNotesCount = settings.notesCount
     lastNotesId: string
   
   while count < getNotesCount:
     let notes = if count == 0:
-      getNotes(settings.token, meimeiToken, 100).getElems()
+      getNotes(settings.token, settings.userId, 100).getElems()
     else:
-      getNotes(settings.token, meimeiToken, 100, lastNotesId).getElems()
+      getNotes(settings.token, settings.userId, 100, lastNotesId).getElems()
 
     var text: string
     for note in notes:
@@ -40,5 +42,5 @@ proc main() =
     lastNotesId = notes[99]["id"].getStr
     count += 100
     echo count.intToStr & " / " & getNotesCount.intToStr
-    sleep(10000)
+    sleep(settings.wait)
 main()
